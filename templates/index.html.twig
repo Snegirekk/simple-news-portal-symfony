@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for article in articlesPageDto %}
+        {{ dump(article) }}
+    {% endfor %}
+    <span>pages: {{ articlesPageDto.page }}, items per page: {{ articlesPageDto.itemsPerPage }}, total pages: {{ articlesPageDto.totalPages }}</span>
+{% endblock body %}

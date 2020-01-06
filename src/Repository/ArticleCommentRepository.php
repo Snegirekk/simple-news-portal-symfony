@@ -2,8 +2,15 @@
 
 namespace App\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\ArticleComment;
 
-class ArticleCommentRepository extends ServiceEntityRepository
+class ArticleCommentRepository extends BaseEntityRepository
 {
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityClass(): string
+    {
+        return ArticleComment::class;
+    }
 }

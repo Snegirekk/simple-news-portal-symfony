@@ -2,8 +2,15 @@
 
 namespace App\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Category;
 
-class CategoryRepository extends ServiceEntityRepository
+class CategoryRepository extends BaseEntityRepository
 {
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityClass(): string
+    {
+        return Category::class;
+    }
 }

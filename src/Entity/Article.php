@@ -23,7 +23,7 @@ class Article
      * @var string
      * @ORM\Column(type="string", nullable=false)
      */
-    private $name;
+    private $title;
 
     /**
      * @var string
@@ -73,18 +73,18 @@ class Article
     /**
      * @return string
      */
-    public function getName(): string
+    public function getTitle(): string
     {
-        return $this->name;
+        return $this->title;
     }
 
     /**
-     * @param string $name
+     * @param string $title
      * @return self
      */
-    public function setName(string $name): self
+    public function setTitle(string $title): self
     {
-        $this->name = $name;
+        $this->title = $title;
         return $this;
     }
 

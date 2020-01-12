@@ -1,0 +1,14 @@
+{% macro menuItems(categories, queryParams) %}
+    {% for category in categories %}
+        {% set queryParams = queryParams|merge({ category: category.id }) %}
+        
+        <li>
+            <a href="{{ path('index', queryParams) }}">{{ category.title }}</a>
+            {% if category.subcategories %}
+                <ul>
+                    {{ _self.menuItems(category.subcategories, queryParams) }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}

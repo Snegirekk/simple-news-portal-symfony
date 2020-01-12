@@ -31,13 +31,14 @@ class PageDto extends AbstractDto implements CollectionDtoInterface, Countable
      * @param CollectionDto $collection
      * @param int $page
      * @param int $itemsPerPage
+     * @param int $totalPages
      */
-    public function __construct(CollectionDto $collection, int $page, int $itemsPerPage)
+    public function __construct(CollectionDto $collection, int $page, int $itemsPerPage, int $totalPages)
     {
         $this->collection = $collection;
         $this->page = $page;
         $this->itemsPerPage = $itemsPerPage;
-        $this->totalPages = (int)ceil($collection->count() / $itemsPerPage);
+        $this->totalPages = $totalPages;
     }
 
     /**

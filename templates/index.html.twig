@@ -1,8 +1,20 @@
 {% extends 'base.html.twig' %}
 
+{% import "macros/menu_macros.html.twig" as menuMacros %}
+
+{% set queryParams = {
+    itemsPerPage: app.request.query.get('itemsPerPage'),
+    sort: app.request.query.get('sort')
+} %}
+
 {% block body %}
+    <ul>
+        {{ menuMacros.menuItems(categories, queryParams) }}
+    </ul>
+
     {% for article in articlesPageDto %}
         {{ dump(article) }}
     {% endfor %}
+
     <span>pages: {{ articlesPageDto.page }}, items per page: {{ articlesPageDto.itemsPerPage }}, total pages: {{ articlesPageDto.totalPages }}</span>
 {% endblock body %}

@@ -19,7 +19,7 @@ class MainPageArticleDto extends AbstractDto
     /**
      * @var string
      */
-    private $url;
+    private $slug;
 
     /**
      * @return string
@@ -60,18 +60,18 @@ class MainPageArticleDto extends AbstractDto
     /**
      * @return string
      */
-    public function getUrl(): string
+    public function getSlug(): string
     {
-        return $this->url;
+        return $this->slug;
     }
 
     /**
-     * @param string $url
+     * @param string $slug
      * @return MainPageArticleDto
      */
-    public function setUrl(string $url): MainPageArticleDto
+    public function setSlug(string $slug): MainPageArticleDto
     {
-        $this->url = $url;
+        $this->slug = $slug;
         return $this;
     }
 

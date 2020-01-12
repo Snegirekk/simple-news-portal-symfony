@@ -5,8 +5,8 @@ namespace App\Repository;
 use App\Entity\Article;
 use App\Pagination\Pagination;
 use App\Pagination\PaginatorAwareTrait;
+use App\Search\Search;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use OutOfBoundsException;
 
 class ArticleRepository extends BaseEntityRepository
 {
@@ -14,15 +14,23 @@ class ArticleRepository extends BaseEntityRepository
 
     /**
      * @param Pagination $pagination
-     * @throws OutOfBoundsException
+     * @param Search $search
      * @return Paginator
      */
-    public function getArticlesForMainPage(Pagination $pagination): Paginator
+    public function getArticlesForMainPage(Pagination $pagination, Search $search): Paginator
     {
         $qb = $this->createQueryBuilder('a');
-        $qb
-            ->select('a.title, a.announcement, a.slug')
-            ->andWhere('a.isActive = true');
+        $qb->select('a.title, a.announcement, a.slug');
+
+        foreach ($search->getFilters() as $field => $value) {
+            $qb
+                ->andWhere(sprintf('a.%1$s = :%1$s', $field))
+                ->setParameter($field, $value);
+        }
+
+        foreach ($search->getOrderBy() as $orderByCondition) {
+            $qb->addOrderBy('a.' . $orderByCondition->getField(), $orderByCondition->getDirection());
+        }
 
         $paginator = $this->getPaginator($qb->getQuery(), $pagination);
         $paginator->setUseOutputWalkers(false);

@@ -3,7 +3,7 @@
 namespace App\RequestHandler;
 
 use App\Dto\AbstractDto;
-use App\Dto\PageDto;
+use App\Dto\CollectionDtoInterface;
 
 interface ReadRequestHandlerInterface extends RequestHandlerInterface
 {
@@ -13,7 +13,7 @@ interface ReadRequestHandlerInterface extends RequestHandlerInterface
     public function read(): AbstractDto;
 
     /**
-     * @return PageDto
+     * @return CollectionDtoInterface
      */
-    public function readPage(): PageDto;
+    public function readBatch(): CollectionDtoInterface;
 }

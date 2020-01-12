@@ -4,6 +4,7 @@ namespace App\RequestHandler\ArticleHandler;
 
 use App\Dto\AbstractDto;
 use App\Dto\CollectionDto;
+use App\Dto\CollectionDtoInterface;
 use App\Dto\PageDto;
 use App\Repository\ArticleRepository;
 use App\RequestHandler\ReadRequestHandlerInterface;
@@ -41,8 +42,9 @@ class MainPageArticleHandler extends AbstractRequestHandler implements ReadReque
      * @inheritDoc
      * @throws RequestHandlerException
      * @throws OutOfBoundsException
+     * @return PageDto
      */
-    public function readPage(): PageDto
+    public function readBatch(): CollectionDtoInterface
     {
         $collection = new CollectionDto(MainPageArticleDto::class);
         $pagination = $this->operation->getPagination();
@@ -51,19 +53,21 @@ class MainPageArticleHandler extends AbstractRequestHandler implements ReadReque
             throw RequestHandlerException::unsatisfiedRequirement($this->operation, 'pagination is required to read the page');
         }
 
-        $articlesPaginator = $this->articleRepository->getArticlesForMainPage($pagination);
+        $articlesPaginator = $this->articleRepository->getArticlesForMainPage($pagination, $this->operation->getSearch());
 
         foreach ($articlesPaginator as $article) {
             $articleDto = new MainPageArticleDto();
             $articleDto
                 ->setTitle($article['title'])
                 ->setAnnouncement($article['announcement'])
-                ->setUrl($article['slug']);
+                ->setSlug($article['slug']);
 
             $collection->add($articleDto);
         }
 
-        return new PageDto($collection, $pagination->getPage(), $pagination->getItemsPerPage());
+        $totalPages = ceil($articlesPaginator->count() / $pagination->getItemsPerPage());
+
+        return new PageDto($collection, $pagination->getPage(), $pagination->getItemsPerPage(), $totalPages);
     }
 
     /**

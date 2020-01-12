@@ -3,6 +3,7 @@
 namespace App\RequestHandler;
 
 use App\RequestHandler\Operation\Operation;
+use App\RequestHandler\Operation\WriteOperation;
 
 class RequestHandlerLocator implements RequestHandlerLocatorInterface
 {

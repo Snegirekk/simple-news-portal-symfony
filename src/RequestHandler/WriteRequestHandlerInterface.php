@@ -8,13 +8,15 @@ interface WriteRequestHandlerInterface extends RequestHandlerInterface
 {
     /**
      * @param AbstractDto $data
+     * @return AbstractDto
      */
-    public function write(AbstractDto $data): void;
+    public function write(AbstractDto $data): AbstractDto;
 
     /**
      * @param iterable $data
+     * @return AbstractDto
      */
-    public function writeBatch(iterable $data): void;
+    public function writeBatch(iterable $data): AbstractDto;
 
     /**
      * @param AbstractDto $data

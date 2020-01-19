@@ -158,7 +158,7 @@ class ArticleController extends BaseController
     private function getArticleForm(Request $request, ?EditableArticleDto $articleDto = null): FormInterface
     {
         $categories = $this->categoryRepository->findCategoriesForChoice();
-        $categories = array_combine(array_column($categories, 'name'), array_column($categories, 'id'));
+        $categories = array_combine(array_column($categories, 'title'), array_column($categories, 'id'));
 
         $form = $this->createForm(ArticleFormType::class, $articleDto, [
             'categories' => $categories,

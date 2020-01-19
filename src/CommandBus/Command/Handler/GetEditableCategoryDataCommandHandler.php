@@ -48,7 +48,7 @@ class GetEditableCategoryDataCommandHandler implements CommandHandlerInterface
         $categoryDto = new EditableCategoryDto();
         $categoryDto
             ->setId($category->getId())
-            ->setTitle($category->getName())
+            ->setTitle($category->getTitle())
             ->setParentCategoryId($category->getParent() ? $category->getParent()->getId() : null);
 
         return $categoryDto;

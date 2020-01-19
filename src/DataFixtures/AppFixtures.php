@@ -32,7 +32,7 @@ EOT;
 
         for ($i = 1; $i < 4; ++$i) {
             $category = new Category();
-            $category->setName('Category #' . $i);
+            $category->setTitle('Category #' . $i);
 
             $categories[] = $category;
             $manager->persist($category);
@@ -40,7 +40,7 @@ EOT;
 
         $subCategory = new Category();
         $subCategory
-            ->setName('SubCategory')
+            ->setTitle('SubCategory')
             ->setParent($categories[rand(0, 2)]);
         $categories[] = $subCategory;
         $manager->persist($subCategory);

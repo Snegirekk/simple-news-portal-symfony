@@ -44,7 +44,7 @@ class GetNavigationCategoriesCommandHandler implements CommandHandlerInterface
             $categoryDto = new NavigationCategoryDto();
             $categoryDto
                 ->setId($category->getId())
-                ->setTitle($category->getName());
+                ->setTitle($category->getTitle());
 
             $this->setSubcategories($categoryDto);
 
@@ -69,7 +69,7 @@ class GetNavigationCategoriesCommandHandler implements CommandHandlerInterface
             $subcategoryDto = new NavigationCategoryDto();
             $subcategoryDto
                 ->setId($subcategory->getId())
-                ->setTitle($subcategory->getName());
+                ->setTitle($subcategory->getTitle());
 
             $this->setSubcategories($subcategoryDto);
 

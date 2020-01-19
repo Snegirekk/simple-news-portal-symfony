@@ -47,7 +47,7 @@ class WriteCategoryCommandHandler implements CommandHandlerInterface
         /** @var Category $category */
         $category = $id ? $this->entityManager->getReference(Category::class, $id) : new Category();
         $category
-            ->setName($data->getTitle())
+            ->setTitle($data->getTitle())
             ->setParent($parentCategoryReference);
 
         $this->entityManager->persist($category);

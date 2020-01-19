@@ -158,7 +158,7 @@ class CategoryController extends BaseController
         $excludedCategories = $categoryDto ? [$categoryDto->getId()] : null;
 
         $categories = $this->categoryRepository->findCategoriesForChoice($excludedCategories);
-        $categories = array_combine(array_column($categories, 'name'), array_column($categories, 'id'));
+        $categories = array_combine(array_column($categories, 'title'), array_column($categories, 'id'));
 
         $form = $this->createForm(CategoryFormType::class, $categoryDto, [
             'categories' => $categories,

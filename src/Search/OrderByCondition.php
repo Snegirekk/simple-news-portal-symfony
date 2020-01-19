@@ -4,9 +4,6 @@ namespace App\Search;
 
 class OrderByCondition
 {
-    const ORDER_BY_ASC  = 'ASC';
-    const ORDER_BY_DESC = 'DESC';
-
     /**
      * @var string
      */
@@ -19,12 +16,13 @@ class OrderByCondition
 
     /**
      * OrderByCondition constructor.
-     * @param string $field
+     *
+     * @param string      $field
      * @param string|null $direction
      */
     public function __construct(string $field, ?string $direction = null)
     {
-        $this->field     = $field;
+        $this->field = $field;
         $this->direction = $direction;
     }
 
@@ -43,5 +41,4 @@ class OrderByCondition
     {
         return $this->direction;
     }
-
 }

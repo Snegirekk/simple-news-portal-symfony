@@ -9,6 +9,7 @@ abstract class BaseEntityRepository extends ServiceEntityRepository
 {
     /**
      * BaseEntityRepository constructor.
+     *
      * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)

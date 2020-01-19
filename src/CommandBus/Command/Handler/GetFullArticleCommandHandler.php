@@ -1,21 +1,18 @@
 <?php
 
-namespace App\RequestHandler\ArticleHandler;
+namespace App\CommandBus\Command\Handler;
 
-use App\Dto\AbstractDto;
+use App\CommandBus\Command\GetFullArticleCommand;
+use App\CommandBus\CommandHandlerInterface;
 use App\Dto\Article\ViewArticleDto;
 use App\Dto\ArticleComment\CommentDto;
-use App\Dto\CollectionDtoInterface;
 use App\Entity\Article;
 use App\Entity\ArticleComment;
 use App\Repository\ArticleCommentRepository;
 use App\Repository\ArticleRepository;
-use App\RequestHandler\AbstractRequestHandler;
-use App\RequestHandler\ReadRequestHandlerInterface;
-use App\RequestHandler\RequestHandlerException;
 use Doctrine\ORM\EntityNotFoundException;
 
-class FullArticleHandler extends AbstractRequestHandler implements ReadRequestHandlerInterface
+class GetFullArticleCommandHandler implements CommandHandlerInterface
 {
     /**
      * @var ArticleRepository
@@ -29,21 +26,26 @@ class FullArticleHandler extends AbstractRequestHandler implements ReadRequestHa
 
     /**
      * FullArticleHandler constructor.
-     * @param ArticleRepository $articleRepository
+     *
+     * @param ArticleRepository        $articleRepository
      * @param ArticleCommentRepository $articleCommentRepository
      */
     public function __construct(ArticleRepository $articleRepository, ArticleCommentRepository $articleCommentRepository)
     {
-        $this->articleRepository        = $articleRepository;
+        $this->articleRepository = $articleRepository;
         $this->articleCommentRepository = $articleCommentRepository;
     }
 
     /**
-     * @inheritDoc
+     * @param GetFullArticleCommand $command
+     *
+     * @return ViewArticleDto
+     *
+     * @throws EntityNotFoundException
      */
-    public function read(): AbstractDto
+    public function exec($command): ViewArticleDto
     {
-        $filters = $this->operation->getSearch()->getFilters();
+        $filters = $command->getSearch()->getFilters();
 
         /** @var Article $article */
         $article = $this->articleRepository->findOneBy($filters);
@@ -54,7 +56,7 @@ class FullArticleHandler extends AbstractRequestHandler implements ReadRequestHa
         }
 
         /** @var ArticleComment[] $comments */
-        $comments    = $this->articleCommentRepository->findBy(['article' => $article]);
+        $comments = $this->articleCommentRepository->findBy(['article' => $article]);
         $commentDtos = [];
 
         foreach ($comments as $comment) {
@@ -77,16 +79,8 @@ class FullArticleHandler extends AbstractRequestHandler implements ReadRequestHa
     /**
      * @inheritDoc
      */
-    public function readBatch(): CollectionDtoInterface
+    public function supports($command): bool
     {
-        throw RequestHandlerException::unimplementedAction($this->operation, __FUNCTION__);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function supports(string $dataType): bool
-    {
-        return $dataType === ViewArticleDto::class;
+        return $command instanceof GetFullArticleCommand;
     }
 }

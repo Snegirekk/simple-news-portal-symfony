@@ -57,7 +57,7 @@ class Article
 
     /**
      * @var Category
-     * @ORM\ManyToOne(targetEntity="Category")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="articles")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $category;
@@ -80,6 +80,7 @@ class Article
 
     /**
      * @param string $title
+     *
      * @return self
      */
     public function setTitle(string $title): self
@@ -98,6 +99,7 @@ class Article
 
     /**
      * @param string $slug
+     *
      * @return self
      */
     public function setSlug(string $slug): self
@@ -116,6 +118,7 @@ class Article
 
     /**
      * @param string $announcement
+     *
      * @return self
      */
     public function setAnnouncement(string $announcement): self
@@ -134,6 +137,7 @@ class Article
 
     /**
      * @param string $content
+     *
      * @return self
      */
     public function setContent(string $content): self
@@ -152,6 +156,7 @@ class Article
 
     /**
      * @param bool $isActive
+     *
      * @return self
      */
     public function setIsActive(bool $isActive): self
@@ -170,6 +175,7 @@ class Article
 
     /**
      * @param DateTime $createdAt
+     *
      * @return self
      */
     public function setCreatedAt(DateTime $createdAt): self
@@ -188,6 +194,7 @@ class Article
 
     /**
      * @param Category $category
+     *
      * @return self
      */
     public function setCategory(Category $category): self
@@ -195,5 +202,4 @@ class Article
         $this->category = $category;
         return $this;
     }
-
 }

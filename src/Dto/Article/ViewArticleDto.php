@@ -2,11 +2,11 @@
 
 namespace App\Dto\Article;
 
-use App\Dto\AbstractDto;
 use App\Dto\ArticleComment\CommentDto;
+use App\Dto\DtoInterface;
 use DateTime;
 
-class ViewArticleDto extends AbstractDto
+class ViewArticleDto implements DtoInterface
 {
     /**
      * @var string
@@ -38,6 +38,7 @@ class ViewArticleDto extends AbstractDto
 
     /**
      * @param string $title
+     *
      * @return ViewArticleDto
      */
     public function setTitle(string $title): ViewArticleDto
@@ -56,6 +57,7 @@ class ViewArticleDto extends AbstractDto
 
     /**
      * @param string $content
+     *
      * @return ViewArticleDto
      */
     public function setContent(string $content): ViewArticleDto
@@ -74,6 +76,7 @@ class ViewArticleDto extends AbstractDto
 
     /**
      * @param CommentDto[] $comments
+     *
      * @return ViewArticleDto
      */
     public function setComments(array $comments): ViewArticleDto
@@ -92,6 +95,7 @@ class ViewArticleDto extends AbstractDto
 
     /**
      * @param DateTime $createdAt
+     *
      * @return ViewArticleDto
      */
     public function setCreatedAt(DateTime $createdAt): ViewArticleDto
@@ -99,5 +103,4 @@ class ViewArticleDto extends AbstractDto
         $this->createdAt = $createdAt;
         return $this;
     }
-
 }

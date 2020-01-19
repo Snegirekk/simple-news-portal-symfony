@@ -6,8 +6,8 @@ services:
         autoconfigure: true
 
     _instanceof:
-        App\RequestHandler\RequestHandlerInterface:
-            tags: ['request_handler']
+        App\CommandBus\CommandHandlerInterface:
+            tags: ['command_handler']
 
     App\:
         resource: '../src/*'
@@ -17,6 +17,6 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    App\RequestHandler\RequestHandlerLocator:
+    App\CommandBus\CommandBus:
         arguments:
-            $handlers: !tagged request_handler
+            $handlers: !tagged command_handler

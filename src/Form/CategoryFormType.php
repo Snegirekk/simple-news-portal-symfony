@@ -2,15 +2,14 @@
 
 namespace App\Form;
 
-use App\Dto\Article\EditableArticleDto;
+use App\Dto\Category\EditableCategoryDto;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ArticleFormType extends AbstractType
+class CategoryFormType extends AbstractType
 {
     /**
      * @inheritDoc
@@ -19,14 +18,11 @@ class ArticleFormType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('announcement')
-            ->add('content')
-            ->add('isActive', CheckboxType::class, [
+            ->add('parentCategoryId', ChoiceType::class, [
                 'required' => false,
-            ])
-            ->add('categoryId', ChoiceType::class, [
+                'placeholder' => 'Choose category',
                 'choices' => $options['categories'],
-                'label' => 'Category',
+                'label' => 'Parent category',
             ])
             ->add('submit', SubmitType::class);
     }
@@ -37,7 +33,7 @@ class ArticleFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => EditableArticleDto::class,
+            'data_class' => EditableCategoryDto::class,
             'validation_groups' => ['Default'],
             'categories' => [],
         ]);

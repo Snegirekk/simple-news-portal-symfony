@@ -2,9 +2,9 @@
 
 namespace App\Dto\Article;
 
-use App\Dto\AbstractDto;
+use App\Dto\DtoInterface;
 
-class WriteableArticleDto extends AbstractDto
+class EditableArticleDto implements DtoInterface
 {
     /**
      * @var int|null
@@ -46,9 +46,10 @@ class WriteableArticleDto extends AbstractDto
 
     /**
      * @param int|null $id
-     * @return WriteableArticleDto
+     *
+     * @return EditableArticleDto
      */
-    public function setId(?int $id): WriteableArticleDto
+    public function setId(?int $id): EditableArticleDto
     {
         $this->id = $id;
         return $this;
@@ -64,9 +65,10 @@ class WriteableArticleDto extends AbstractDto
 
     /**
      * @param string|null $title
-     * @return WriteableArticleDto
+     *
+     * @return EditableArticleDto
      */
-    public function setTitle(?string $title): WriteableArticleDto
+    public function setTitle(?string $title): EditableArticleDto
     {
         $this->title = $title;
         return $this;
@@ -82,9 +84,10 @@ class WriteableArticleDto extends AbstractDto
 
     /**
      * @param string|null $announcement
-     * @return WriteableArticleDto
+     *
+     * @return EditableArticleDto
      */
-    public function setAnnouncement(?string $announcement): WriteableArticleDto
+    public function setAnnouncement(?string $announcement): EditableArticleDto
     {
         $this->announcement = $announcement;
         return $this;
@@ -100,9 +103,10 @@ class WriteableArticleDto extends AbstractDto
 
     /**
      * @param string|null $content
-     * @return WriteableArticleDto
+     *
+     * @return EditableArticleDto
      */
-    public function setContent(?string $content): WriteableArticleDto
+    public function setContent(?string $content): EditableArticleDto
     {
         $this->content = $content;
         return $this;
@@ -118,9 +122,10 @@ class WriteableArticleDto extends AbstractDto
 
     /**
      * @param bool $isActive
-     * @return WriteableArticleDto
+     *
+     * @return EditableArticleDto
      */
-    public function setIsActive(bool $isActive): WriteableArticleDto
+    public function setIsActive(bool $isActive): EditableArticleDto
     {
         $this->isActive = $isActive;
         return $this;
@@ -136,12 +141,12 @@ class WriteableArticleDto extends AbstractDto
 
     /**
      * @param int|null $categoryId
-     * @return WriteableArticleDto
+     *
+     * @return EditableArticleDto
      */
-    public function setCategoryId(?int $categoryId): WriteableArticleDto
+    public function setCategoryId(?int $categoryId): EditableArticleDto
     {
         $this->categoryId = $categoryId;
         return $this;
     }
-
 }

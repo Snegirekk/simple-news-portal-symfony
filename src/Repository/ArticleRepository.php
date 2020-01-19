@@ -14,7 +14,8 @@ class ArticleRepository extends BaseEntityRepository
 
     /**
      * @param Pagination $pagination
-     * @param Search $search
+     * @param Search     $search
+     *
      * @return Paginator
      */
     public function getArticlesForMainPage(Pagination $pagination, Search $search): Paginator

@@ -2,17 +2,17 @@
 
 namespace App\Controller;
 
+use App\CommandBus\Command\DeleteArticleCommand;
+use App\CommandBus\Command\GetEditableArticleDataCommand;
+use App\CommandBus\Command\GetFullArticleCommand;
+use App\CommandBus\Command\WriteArticleCommand;
+use App\CommandBus\CommandBusInterface;
 use App\Dto\Article\ArticleSlugDto;
-use App\Dto\Article\DeleteArticleDto;
+use App\Dto\Article\EditableArticleDto;
 use App\Dto\Article\ViewArticleDto;
-use App\Dto\Article\WriteableArticleDto;
+use App\Dto\DtoInterface;
 use App\Form\ArticleFormType;
 use App\Repository\CategoryRepository;
-use App\RequestHandler\Operation\ReadOperation;
-use App\RequestHandler\Operation\WriteOperation;
-use App\RequestHandler\ReadRequestHandlerInterface;
-use App\RequestHandler\RequestHandlerLocatorInterface;
-use App\RequestHandler\WriteRequestHandlerInterface;
 use App\Search\Search;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,18 +28,20 @@ class ArticleController extends BaseController
 
     /**
      * ArticleController constructor.
-     * @param RequestHandlerLocatorInterface $requestHandlerLocator
-     * @param CategoryRepository $categoryRepository
+     *
+     * @param CommandBusInterface $commandBus
+     * @param CategoryRepository  $categoryRepository
      */
-    public function __construct(RequestHandlerLocatorInterface $requestHandlerLocator, CategoryRepository $categoryRepository)
+    public function __construct(CommandBusInterface $commandBus, CategoryRepository $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
 
-        parent::__construct($requestHandlerLocator);
+        parent::__construct($commandBus);
     }
 
     /**
      * @param string $slug
+     *
      * @return Response
      *
      * @Route(name="view_article", path="/news/{slug}", methods={"GET"})
@@ -49,29 +51,28 @@ class ArticleController extends BaseController
         $search = new Search();
         $search->setFilters([
             'isActive' => true,
-            'slug'     => $slug,
+            'slug' => $slug,
         ]);
 
-        $operation = new ReadOperation(ViewArticleDto::class);
-        $operation->setSearch($search);
+        $command = new GetFullArticleCommand();
+        $command->setSearch($search);
 
-        /** @var ReadRequestHandlerInterface $requestHandler */
-        $requestHandler = $this->requestHandlerLocator->getRequestHandler($operation);
-        $articleDto     = $requestHandler->read();
+        /** @var ViewArticleDto $articleDto */
+        $articleDto = $this->commandBus->exec($command);
 
         return $this->render('view_article.html.twig', [
-            'articleDto' => $articleDto,
+            'article' => $articleDto,
         ]);
     }
 
     /**
      * @param Request $request
-     * @param CategoryRepository $categoryRepository
+     *
      * @return Response
      *
      * @Route(name="create_article", path="/admin/news/create", methods={"GET", "POST"})
      */
-    public function createArticle(Request $request, CategoryRepository $categoryRepository): Response
+    public function createArticle(Request $request): Response
     {
         $form = $this->getArticleForm($request);
 
@@ -80,14 +81,15 @@ class ArticleController extends BaseController
             return $this->redirectToRoute('edit_article', ['slug' => $article->getSlug()]);
         }
 
-        return $this->render('create_article.html.twig', [
+        return $this->render('edit_article.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
      * @param Request $request
-     * @param string $slug
+     * @param string  $slug
+     *
      * @return Response
      *
      * @Route(name="edit_article", path="/admin/news/edit/{slug}", methods={"GET", "POST"})
@@ -97,12 +99,11 @@ class ArticleController extends BaseController
         $search = new Search();
         $search->setFilters(['slug' => $slug]);
 
-        $operation = new ReadOperation(WriteableArticleDto::class);
-        $operation->setSearch($search);
+        $command = new GetEditableArticleDataCommand();
+        $command->setSearch($search);
 
-        /** @var ReadRequestHandlerInterface $requestHandler */
-        $requestHandler = $this->requestHandlerLocator->getRequestHandler($operation);
-        $articleDto     = $requestHandler->read();
+        /** @var EditableArticleDto $articleDto */
+        $articleDto = $this->commandBus->exec($command);
 
         $form = $this->getArticleForm($request, $articleDto);
 
@@ -110,37 +111,38 @@ class ArticleController extends BaseController
             $this->writeArticle($form->getData());
         }
 
-        return $this->render('create_article.html.twig', [
+        return $this->render('edit_article.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @param Request $request
      * @param string $slug
+     *
      * @return Response
      *
      * @Route(name="delete_article", path="/admin/news/delete/{slug}", methods={"POST"})
      */
-    public function deleteArticle(Request $request, string $slug): Response
+    public function deleteArticle(string $slug): Response
     {
-        $operation  = new WriteOperation(DeleteArticleDto::class);
-        $articleDto = new DeleteArticleDto();
+        $articleDto = new ArticleSlugDto();
         $articleDto->setSlug($slug);
 
-        /** @var WriteRequestHandlerInterface $requestHandler */
-        $requestHandler = $this->requestHandlerLocator->getRequestHandler($operation);
-        $requestHandler->delete($articleDto);
+        $command = new DeleteArticleCommand();
+        $command->setData($articleDto);
+
+        $this->commandBus->exec($command);
 
         return $this->redirectToRoute('index');
     }
 
     /**
-     * @param Request $request
-     * @param WriteableArticleDto|null $articleDto
+     * @param Request                 $request
+     * @param EditableArticleDto|null $articleDto
+     *
      * @return FormInterface
      */
-    private function getArticleForm(Request $request, ?WriteableArticleDto $articleDto = null): FormInterface
+    private function getArticleForm(Request $request, ?EditableArticleDto $articleDto = null): FormInterface
     {
         $categories = $this->categoryRepository->findCategoriesForChoice();
         $categories = array_combine(array_column($categories, 'name'), array_column($categories, 'id'));
@@ -155,16 +157,15 @@ class ArticleController extends BaseController
     }
 
     /**
-     * @param WriteableArticleDto $articleDto
-     * @return ArticleSlugDto
+     * @param EditableArticleDto $articleDto
+     *
+     * @return ArticleSlugDto|DtoInterface
      */
-    private function writeArticle(WriteableArticleDto $articleDto): ArticleSlugDto
+    private function writeArticle(EditableArticleDto $articleDto): ArticleSlugDto
     {
-        $operation = new WriteOperation(WriteableArticleDto::class);
+        $command = new WriteArticleCommand();
+        $command->setData($articleDto);
 
-        /** @var WriteRequestHandlerInterface $requestHandler */
-        $requestHandler = $this->requestHandlerLocator->getRequestHandler($operation);
-
-        return $requestHandler->write($articleDto);
+        return $this->commandBus->exec($command);
     }
 }

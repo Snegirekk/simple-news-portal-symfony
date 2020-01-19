@@ -16,12 +16,13 @@ class Pagination
 
     /**
      * Pagination constructor.
+     *
      * @param int $page
      * @param int $itemsPerPage
      */
     public function __construct(int $page, int $itemsPerPage)
     {
-        $this->page         = $page;
+        $this->page = $page;
         $this->itemsPerPage = $itemsPerPage;
     }
 
@@ -40,5 +41,4 @@ class Pagination
     {
         return $this->itemsPerPage;
     }
-
 }

@@ -49,6 +49,7 @@ class ArticleComment
 
     /**
      * @param string $content
+     *
      * @return self
      */
     public function setContent(string $content): self
@@ -67,6 +68,7 @@ class ArticleComment
 
     /**
      * @param Article $article
+     *
      * @return self
      */
     public function setArticle(Article $article): self
@@ -74,5 +76,4 @@ class ArticleComment
         $this->article = $article;
         return $this;
     }
-
 }

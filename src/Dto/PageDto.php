@@ -3,8 +3,9 @@
 namespace App\Dto;
 
 use Countable;
+use IteratorAggregate;
 
-class PageDto extends AbstractDto implements CollectionDtoInterface, Countable
+class PageDto implements CollectionDtoInterface, IteratorAggregate, Countable
 {
     /**
      * @var CollectionDto
@@ -28,10 +29,11 @@ class PageDto extends AbstractDto implements CollectionDtoInterface, Countable
 
     /**
      * PageDto constructor.
+     *
      * @param CollectionDto $collection
-     * @param int $page
-     * @param int $itemsPerPage
-     * @param int $totalPages
+     * @param int           $page
+     * @param int           $itemsPerPage
+     * @param int           $totalPages
      */
     public function __construct(CollectionDto $collection, int $page, int $itemsPerPage, int $totalPages)
     {

@@ -2,9 +2,9 @@
 
 namespace App\Dto\ArticleComment;
 
-use App\Dto\AbstractDto;
+use App\Dto\DtoInterface;
 
-class CommentDto extends AbstractDto
+class CommentDto implements DtoInterface
 {
     /**
      * @var string
@@ -21,6 +21,7 @@ class CommentDto extends AbstractDto
 
     /**
      * @param string $content
+     *
      * @return CommentDto
      */
     public function setContent(string $content): CommentDto
@@ -28,5 +29,4 @@ class CommentDto extends AbstractDto
         $this->content = $content;
         return $this;
     }
-
 }

@@ -2,17 +2,19 @@
 
 namespace App\Dto;
 
-interface FillableDtoInterface
+interface FillableDtoInterface extends DtoInterface
 {
     /**
-     * @param AbstractDto $item
+     * @param DtoInterface $item
+     *
      * @return self
      */
-    public function add(AbstractDto $item): self;
+    public function add(DtoInterface $item): self;
 
     /**
-     * @param AbstractDto $item
+     * @param DtoInterface $item
+     *
      * @return self
      */
-    public function remove(AbstractDto $item): self;
+    public function remove(DtoInterface $item): self;
 }

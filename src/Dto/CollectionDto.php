@@ -4,11 +4,12 @@ namespace App\Dto;
 
 use Countable;
 use InvalidArgumentException;
+use IteratorAggregate;
 
-class CollectionDto extends AbstractDto implements CollectionDtoInterface, FillableDtoInterface, Countable
+class CollectionDto implements CollectionDtoInterface, FillableDtoInterface, IteratorAggregate, Countable
 {
     /**
-     * @var AbstractDto[]
+     * @var DtoInterface[]
      */
     private $items = [];
 
@@ -19,6 +20,7 @@ class CollectionDto extends AbstractDto implements CollectionDtoInterface, Filla
 
     /**
      * PageDto constructor.
+     *
      * @param string $itemsType
      */
     public function __construct(string $itemsType)
@@ -37,7 +39,7 @@ class CollectionDto extends AbstractDto implements CollectionDtoInterface, Filla
     /**
      * @inheritDoc
      */
-    public function add(AbstractDto $item): FillableDtoInterface
+    public function add(DtoInterface $item): FillableDtoInterface
     {
         if (!$item instanceof $this->itemsType) {
             throw new InvalidArgumentException(sprintf('Can not add "%s" to collection of type "%s".', get_class($item), $this->itemsType));
@@ -51,7 +53,7 @@ class CollectionDto extends AbstractDto implements CollectionDtoInterface, Filla
     /**
      * @inheritDoc
      */
-    public function remove(AbstractDto $item): FillableDtoInterface
+    public function remove(DtoInterface $item): FillableDtoInterface
     {
         $index = array_search($item, $this->items);
 

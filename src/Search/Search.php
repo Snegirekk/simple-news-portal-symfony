@@ -24,6 +24,7 @@ class Search
 
     /**
      * @param array $filters
+     *
      * @return Search
      */
     public function setFilters(array $filters): Search
@@ -42,6 +43,7 @@ class Search
 
     /**
      * @param OrderByCondition $orderBy
+     *
      * @return Search
      */
     public function addOrderBy(OrderByCondition $orderBy): Search
@@ -49,5 +51,4 @@ class Search
         $this->orderBy[] = $orderBy;
         return $this;
     }
-
 }

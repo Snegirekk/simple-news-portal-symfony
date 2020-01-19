@@ -1,5 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ dump(articleDto) }}
+    <h1>{{ article.title }}</h1>
+    <div>{{ article.content }}</div>
+    <div>{{ article.createdAt|date('H:i:s d M Y') }}</div>
+    <hr>
+
+    {% for comment in article.comments %}
+        <div>&gt;&gt; {{ comment.content }}</div>
+    {% endfor %}
 {% endblock body %}

@@ -2,23 +2,23 @@
 
 namespace App\Controller;
 
-use App\RequestHandler\RequestHandlerLocatorInterface;
+use App\CommandBus\CommandBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class BaseController extends AbstractController
 {
     /**
-     * @var RequestHandlerLocatorInterface
+     * @var CommandBusInterface
      */
-    protected $requestHandlerLocator;
+    protected $commandBus;
 
     /**
      * BaseController constructor.
-     * @param RequestHandlerLocatorInterface $requestHandlerLocator
+     *
+     * @param CommandBusInterface $commandBus
      */
-    public function __construct(RequestHandlerLocatorInterface $requestHandlerLocator)
+    public function __construct(CommandBusInterface $commandBus)
     {
-        $this->requestHandlerLocator = $requestHandlerLocator;
+        $this->commandBus = $commandBus;
     }
-
 }

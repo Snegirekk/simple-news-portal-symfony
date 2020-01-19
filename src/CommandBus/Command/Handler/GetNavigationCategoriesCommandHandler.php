@@ -1,18 +1,18 @@
 <?php
 
-namespace App\RequestHandler\CategoryHandler;
+namespace App\CommandBus\Command\Handler;
 
-use App\Dto\AbstractDto;
+use App\CommandBus\Command\GetNavigationCategoriesCommand;
+use App\CommandBus\CommandHandlerInterface;
 use App\Dto\Category\NavigationCategoryDto;
 use App\Dto\CollectionDto;
 use App\Dto\CollectionDtoInterface;
+use App\Entity\Article;
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
-use App\RequestHandler\AbstractRequestHandler;
-use App\RequestHandler\ReadRequestHandlerInterface;
-use App\RequestHandler\RequestHandlerException;
+use Doctrine\Common\Collections\Collection;
 
-class CategoryHandler extends AbstractRequestHandler implements ReadRequestHandlerInterface
+class GetNavigationCategoriesCommandHandler implements CommandHandlerInterface
 {
     /**
      * @var CategoryRepository
@@ -21,6 +21,7 @@ class CategoryHandler extends AbstractRequestHandler implements ReadRequestHandl
 
     /**
      * CategoryHandler constructor.
+     *
      * @param CategoryRepository $categoryRepository
      */
     public function __construct(CategoryRepository $categoryRepository)
@@ -29,20 +30,14 @@ class CategoryHandler extends AbstractRequestHandler implements ReadRequestHandl
     }
 
     /**
-     * @inheritDoc
+     * @param GetNavigationCategoriesCommand $command
+     *
+     * @return CollectionDtoInterface
      */
-    public function read(): AbstractDto
-    {
-        throw RequestHandlerException::unimplementedAction($this->operation, __FUNCTION__);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function readBatch(): CollectionDtoInterface
+    public function exec($command): CollectionDtoInterface
     {
         /** @var Category[] $categories */
-        $categories   = $this->categoryRepository->findBy(['parent' => null]);
+        $categories = $this->categoryRepository->findBy(['parent' => null]);
         $categoryDtos = new CollectionDto(NavigationCategoryDto::class);
 
         foreach ($categories as $category) {
@@ -53,18 +48,12 @@ class CategoryHandler extends AbstractRequestHandler implements ReadRequestHandl
 
             $this->setSubcategories($categoryDto);
 
-            $categoryDtos->add($categoryDto);
+            if (!$this->getActiveArticles($category)->isEmpty() || !empty($categoryDto->getSubcategories())) {
+                $categoryDtos->add($categoryDto);
+            }
         }
 
         return $categoryDtos;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function supports(string $dataType): bool
-    {
-        return $dataType === NavigationCategoryDto::class;
     }
 
     /**
@@ -73,7 +62,7 @@ class CategoryHandler extends AbstractRequestHandler implements ReadRequestHandl
     private function setSubcategories(NavigationCategoryDto $categoryDto): void
     {
         /** @var Category[] $subcategories */
-        $subcategories   = $this->categoryRepository->findBy(['parent' => $categoryDto->getId()]);
+        $subcategories = $this->categoryRepository->findBy(['parent' => $categoryDto->getId()]);
         $subcategoryDtos = [];
 
         foreach ($subcategories as $subcategory) {
@@ -84,9 +73,31 @@ class CategoryHandler extends AbstractRequestHandler implements ReadRequestHandl
 
             $this->setSubcategories($subcategoryDto);
 
-            $subcategoryDtos[] = $subcategoryDto;
+            if (!$this->getActiveArticles($subcategory)->isEmpty() || !empty($subcategoryDto->getSubcategories())) {
+                $subcategoryDtos[] = $subcategoryDto;
+            }
         }
 
         $categoryDto->setSubcategories($subcategoryDtos);
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return Collection
+     */
+    private function getActiveArticles(Category $category): Collection
+    {
+        return $category->getArticles()->filter(function (Article $article) {
+            return $article->isActive();
+        });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function supports($command): bool
+    {
+        return $command instanceof GetNavigationCategoriesCommand;
     }
 }

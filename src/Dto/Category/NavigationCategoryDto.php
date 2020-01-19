@@ -2,9 +2,9 @@
 
 namespace App\Dto\Category;
 
-use App\Dto\AbstractDto;
+use App\Dto\DtoInterface;
 
-class NavigationCategoryDto extends AbstractDto
+class NavigationCategoryDto implements DtoInterface
 {
     /**
      * @var int
@@ -31,6 +31,7 @@ class NavigationCategoryDto extends AbstractDto
 
     /**
      * @param int $id
+     *
      * @return NavigationCategoryDto
      */
     public function setId(int $id): NavigationCategoryDto
@@ -49,6 +50,7 @@ class NavigationCategoryDto extends AbstractDto
 
     /**
      * @param string $title
+     *
      * @return NavigationCategoryDto
      */
     public function setTitle(string $title): NavigationCategoryDto
@@ -67,6 +69,7 @@ class NavigationCategoryDto extends AbstractDto
 
     /**
      * @param NavigationCategoryDto[] $subcategories
+     *
      * @return NavigationCategoryDto
      */
     public function setSubcategories(array $subcategories): NavigationCategoryDto
@@ -74,5 +77,4 @@ class NavigationCategoryDto extends AbstractDto
         $this->subcategories = $subcategories;
         return $this;
     }
-
 }

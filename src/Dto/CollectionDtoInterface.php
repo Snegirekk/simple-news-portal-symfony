@@ -2,9 +2,7 @@
 
 namespace App\Dto;
 
-use IteratorAggregate;
-
-interface CollectionDtoInterface extends IteratorAggregate
+interface CollectionDtoInterface extends DtoInterface
 {
     /**
      * @return string

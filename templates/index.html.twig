@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% import "macros/menu_macros.html.twig" as menuMacros %}
+{% import 'macros/menu_macros.html.twig' as menuMacros %}
 
 {% set queryParams = {
     itemsPerPage: app.request.query.get('itemsPerPage'),
-    sort: app.request.query.get('sort')
+    sort: app.request.query.get('sort'),
+    category: app.request.query.get('category'),
 } %}
 
 {% block body %}
@@ -12,9 +13,18 @@
         {{ menuMacros.menuItems(categories, queryParams) }}
     </ul>
 
-    {% for article in articlesPageDto %}
-        {{ dump(article) }}
+    {% for article in articlesPage %}
+        <h2>{{ article.title }}</h2>
+        <div>
+            {{ article.announcement }}
+            <a href="{{ url('view_article', { slug: article.slug }) }}">Read more &gt;&gt;</a>
+        </div>
+        <hr>
     {% endfor %}
 
-    <span>pages: {{ articlesPageDto.page }}, items per page: {{ articlesPageDto.itemsPerPage }}, total pages: {{ articlesPageDto.totalPages }}</span>
+    <div>
+        {% for page in 1..articlesPage.totalPages %}
+            <a href="{{ url('index', queryParams|merge({ page: page })) }}">{{ page }}</a>
+        {% endfor %}
+    </div>
 {% endblock body %}

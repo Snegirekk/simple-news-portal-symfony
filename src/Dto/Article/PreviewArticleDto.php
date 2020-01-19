@@ -2,9 +2,9 @@
 
 namespace App\Dto\Article;
 
-use App\Dto\AbstractDto;
+use App\Dto\DtoInterface;
 
-class MainPageArticleDto extends AbstractDto
+class PreviewArticleDto implements DtoInterface
 {
     /**
      * @var string
@@ -31,9 +31,10 @@ class MainPageArticleDto extends AbstractDto
 
     /**
      * @param string $title
-     * @return MainPageArticleDto
+     *
+     * @return PreviewArticleDto
      */
-    public function setTitle(string $title): MainPageArticleDto
+    public function setTitle(string $title): PreviewArticleDto
     {
         $this->title = $title;
         return $this;
@@ -49,9 +50,10 @@ class MainPageArticleDto extends AbstractDto
 
     /**
      * @param string $announcement
-     * @return MainPageArticleDto
+     *
+     * @return PreviewArticleDto
      */
-    public function setAnnouncement(string $announcement): MainPageArticleDto
+    public function setAnnouncement(string $announcement): PreviewArticleDto
     {
         $this->announcement = $announcement;
         return $this;
@@ -67,12 +69,12 @@ class MainPageArticleDto extends AbstractDto
 
     /**
      * @param string $slug
-     * @return MainPageArticleDto
+     *
+     * @return PreviewArticleDto
      */
-    public function setSlug(string $slug): MainPageArticleDto
+    public function setSlug(string $slug): PreviewArticleDto
     {
         $this->slug = $slug;
         return $this;
     }
-
 }

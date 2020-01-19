@@ -2,9 +2,9 @@
 
 namespace App\Dto\Article;
 
-use App\Dto\AbstractDto;
+use App\Dto\DtoInterface;
 
-class ArticleSlugDto extends AbstractDto
+class ArticleSlugDto implements DtoInterface
 {
     /**
      * @var string
@@ -21,6 +21,7 @@ class ArticleSlugDto extends AbstractDto
 
     /**
      * @param string $slug
+     *
      * @return ArticleSlugDto
      */
     public function setSlug(string $slug): ArticleSlugDto
@@ -28,5 +29,4 @@ class ArticleSlugDto extends AbstractDto
         $this->slug = $slug;
         return $this;
     }
-
 }

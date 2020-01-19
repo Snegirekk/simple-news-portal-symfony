@@ -9,17 +9,19 @@ use OutOfBoundsException;
 trait PaginatorAwareTrait
 {
     /**
-     * @param Query $query
+     * @param Query      $query
      * @param Pagination $pagination
-     * @param bool $fetchJoinCollection
+     * @param bool       $fetchJoinCollection
+     *
      * @throws OutOfBoundsException
+     *
      * @return Paginator
      */
     protected function getPaginator(Query $query, Pagination $pagination, bool $fetchJoinCollection = true): Paginator
     {
-        $page         = $pagination->getPage();
+        $page = $pagination->getPage();
         $itemsPerPage = $pagination->getItemsPerPage();
-        $firstResult  = abs(($page - 1) * $itemsPerPage);
+        $firstResult = abs(($page - 1) * $itemsPerPage);
 
         $query
             ->setFirstResult($firstResult)
@@ -28,7 +30,7 @@ trait PaginatorAwareTrait
         $paginator = new Paginator($query, $fetchJoinCollection);
         $paginator->setUseOutputWalkers(false);
 
-        $lastPage = ceil($paginator->count() / $itemsPerPage);
+        $lastPage = max(ceil($paginator->count() / $itemsPerPage), 1);
 
         if ($page < 1 || $page > $lastPage) {
             throw new OutOfBoundsException(sprintf('%d is out of available pages range: 1..%d', $page, $lastPage));

@@ -56,7 +56,7 @@ class GetFullArticleCommandHandler implements CommandHandlerInterface
         }
 
         /** @var ArticleComment[] $comments */
-        $comments = $this->articleCommentRepository->findBy(['article' => $article]);
+        $comments = $this->articleCommentRepository->findBy(['article' => $article], ['id' => 'DESC']);
         $commentDtos = [];
 
         foreach ($comments as $comment) {

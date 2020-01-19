@@ -8,6 +8,10 @@
     <div class="clearfix"></div>
     <hr>
 
+    {{ form(commentForm) }}
+
+    <hr>
+
     {% if article.comments is empty %}
         <p class="text-muted">Nobody has commented yet...</p>
     {% else %}

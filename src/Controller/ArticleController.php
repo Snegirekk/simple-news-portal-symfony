@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
-use App\CommandBus\Command\GetFullArticleCommand;
 use App\CommandBus\Command\GetArticlePreviewsCommand;
+use App\CommandBus\Command\GetFullArticleCommand;
 use App\CommandBus\CommandBusInterface;
 use App\Dto\Article\PreviewArticleDto;
 use App\Dto\Article\ViewArticleDto;
 use App\Dto\PageDto;
+use App\Form\ArticleCommentForm;
 use App\Pagination\Pagination;
 use App\Repository\CategoryRepository;
 use App\Search\OrderByCondition;
@@ -23,6 +24,7 @@ class ArticleController extends BaseController
     private const ITEMS_PER_PAGE = 3;
 
     private const SORT_CREATED_ASC = 'createdAt_asc';
+
     private const SORT_CREATED_DESC = 'createdAt_desc';
 
     /**
@@ -95,13 +97,14 @@ class ArticleController extends BaseController
     }
 
     /**
-     * @param string $slug
+     * @param Request $request
+     * @param string  $slug
      *
      * @return Response
      *
      * @Route(name="view_article", path="/news/{slug}", methods={"GET"})
      */
-    public function viewArticle(string $slug): Response
+    public function viewArticle(Request $request, string $slug): Response
     {
         $search = new Search();
         $search->setFilters([
@@ -115,8 +118,16 @@ class ArticleController extends BaseController
         /** @var ViewArticleDto $articleDto */
         $articleDto = $this->commandBus->exec($command);
 
+        $commentForm = $this->createForm(ArticleCommentForm::class, null, [
+            'action' => $this->generateUrl('post_article_comment', ['slug' => $slug]),
+            'method' => 'POST',
+        ]);
+
+        $commentForm->handleRequest($request);
+
         return $this->render('article/view_article.html.twig', [
             'article' => $articleDto,
+            'commentForm' => $commentForm->createView(),
         ]);
     }
 }

@@ -38,3 +38,13 @@ App\Dto\Category\EditableCategoryDto:
           maxMessage: 'Title cannot be longer than {{ limit }} characters'
     parentCategoryId:
       - Type: int
+
+App\Dto\ArticleComment\CommentDto:
+  properties:
+    content:
+      - NotBlank: ~
+      - Length:
+          min: 10
+          max: 250
+          minMessage: 'Comment must be at least {{ limit }} characters long'
+          maxMessage: 'Comment cannot be longer than {{ limit }} characters'

@@ -44,7 +44,7 @@ class GetCategoriesPageCommandHandler implements CommandHandlerInterface
             $categoryDto = new EditableCategoryDto();
             $categoryDto
                 ->setId($category->getId())
-                ->setTitle($category->getName())
+                ->setTitle($category->getTitle())
                 ->setParentCategoryId($parentCategoryId);
 
             $collection->add($categoryDto);

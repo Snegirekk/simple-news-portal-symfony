@@ -3,7 +3,7 @@
 
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link {{ isArticlesList is defined ? 'active' }}" href="{{ path('admin.list_articles') }}">News</a>
+        <a class="nav-link {{ isArticlesList is defined ? 'active' }}" href="{{ path('admin') }}">News</a>
     </li>
     <li class="nav-item">
         <a class="nav-link {{ isCategoriesList is defined ? 'active' }}" href="{{ path('admin.list_categories') }}">Categories</a>
@@ -22,11 +22,11 @@
                 {% set currentPage = app.request.query.get('page', 1) %}
                 {% set totalPages = page.totalPages %}
                 {% set routeName %}
-                    {% if isArticlesList is defined %}
-                        {{- 'admin.list_articles' -}}
-                    {% elseif isCategoriesList is defined %}
+                    {%- if isArticlesList is defined -%}
+                        {{- 'admin' -}}
+                    {%- elseif isCategoriesList is defined -%}
                         {{- 'admin.list_categories' -}}
-                    {% endif %}
+                    {%- endif -%}
                 {% endset %}
             {% endembed %}
         </nav>

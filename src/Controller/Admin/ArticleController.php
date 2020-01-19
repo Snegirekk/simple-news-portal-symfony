@@ -34,7 +34,6 @@ class ArticleController extends BaseController
      * @return Response
      *
      * @Route(name="admin", path="/admin", methods={"GET"})
-     * @Route(name="admin.list_articles", path="/admin/news", methods={"GET"})
      */
     public function listArticles(Request $request): Response
     {
@@ -146,7 +145,7 @@ class ArticleController extends BaseController
 
         $this->commandBus->exec($command);
 
-        return $this->redirectToRoute('admin.list_articles');
+        return $this->redirectToRoute('admin');
     }
 
     /**

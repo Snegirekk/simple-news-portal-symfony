@@ -5,7 +5,7 @@ namespace App\CommandBus\Command;
 use App\Pagination\Pagination;
 use App\Search\Search;
 
-class GetMainPageArticlesCommand
+class GetCategoriesPageCommand
 {
     /**
      * @var Pagination
@@ -28,9 +28,9 @@ class GetMainPageArticlesCommand
     /**
      * @param Pagination $pagination
      *
-     * @return GetMainPageArticlesCommand
+     * @return GetCategoriesPageCommand
      */
-    public function setPagination(Pagination $pagination): GetMainPageArticlesCommand
+    public function setPagination(Pagination $pagination): GetCategoriesPageCommand
     {
         $this->pagination = $pagination;
         return $this;
@@ -47,9 +47,9 @@ class GetMainPageArticlesCommand
     /**
      * @param Search $search
      *
-     * @return GetMainPageArticlesCommand
+     * @return GetCategoriesPageCommand
      */
-    public function setSearch(Search $search): GetMainPageArticlesCommand
+    public function setSearch(Search $search): GetCategoriesPageCommand
     {
         $this->search = $search;
         return $this;

@@ -1,0 +1,19 @@
+<ul class="pagination">
+    <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+        <a class="page-link" href="{{ path(routeName, queryParams|merge({ page: currentPage - 1 })) }}">
+            <span>&laquo;</span>
+        </a>
+    </li>
+
+    {% for page in 1..totalPages %}
+            <li class="page-item {% if page == currentPage %}active{% endif %}">
+                <a class="page-link" href="{{ path(routeName, queryParams|merge({ page: page })) }}">{{ page }}</a>
+            </li>
+    {% endfor %}
+
+    <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
+        <a class="page-link" href="{{ path(routeName, queryParams|merge({ page: currentPage + 1 })) }}">
+            <span>&raquo;</span>
+        </a>
+    </li>
+</ul>

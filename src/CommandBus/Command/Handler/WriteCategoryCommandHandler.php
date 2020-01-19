@@ -40,7 +40,9 @@ class WriteCategoryCommandHandler implements CommandHandlerInterface
         $id = $data->getId();
 
         /** @var Category $parentCategoryReference */
-        $parentCategoryReference = $this->entityManager->getReference(Category::class, $data->getParentCategoryId());
+        $parentCategoryReference = $data->getParentCategoryId()
+            ? $this->entityManager->getReference(Category::class, $data->getParentCategoryId())
+            : null;
 
         /** @var Category $category */
         $category = $id ? $this->entityManager->getReference(Category::class, $id) : new Category();
@@ -52,7 +54,7 @@ class WriteCategoryCommandHandler implements CommandHandlerInterface
         $this->entityManager->flush();
 
         $articleDto = new CategoryIdDto();
-        $articleDto->setId($id);
+        $articleDto->setId($category->getId());
 
         return $articleDto;
     }

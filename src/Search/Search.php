@@ -7,7 +7,7 @@ class Search
     /**
      * @var array
      */
-    private $filters;
+    private $filters = [];
 
     /**
      * @var OrderByCondition[]

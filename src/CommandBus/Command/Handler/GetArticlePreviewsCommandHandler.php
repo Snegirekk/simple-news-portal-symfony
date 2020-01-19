@@ -2,7 +2,7 @@
 
 namespace App\CommandBus\Command\Handler;
 
-use App\CommandBus\Command\GetMainPageArticlesCommand;
+use App\CommandBus\Command\GetArticlePreviewsCommand;
 use App\CommandBus\CommandHandlerInterface;
 use App\Dto\Article\PreviewArticleDto;
 use App\Dto\CollectionDto;
@@ -10,7 +10,7 @@ use App\Dto\CollectionDtoInterface;
 use App\Dto\PageDto;
 use App\Repository\ArticleRepository;
 
-class GetMainPageArticlesCommandHandler implements CommandHandlerInterface
+class GetArticlePreviewsCommandHandler implements CommandHandlerInterface
 {
     /**
      * @var ArticleRepository
@@ -28,7 +28,7 @@ class GetMainPageArticlesCommandHandler implements CommandHandlerInterface
     }
 
     /**
-     * @param GetMainPageArticlesCommand $command
+     * @param GetArticlePreviewsCommand $command
      *
      * @return CollectionDtoInterface
      */
@@ -37,7 +37,7 @@ class GetMainPageArticlesCommandHandler implements CommandHandlerInterface
         $collection = new CollectionDto(PreviewArticleDto::class);
         $pagination = $command->getPagination();
 
-        $articlesPaginator = $this->articleRepository->getArticlesForMainPage($pagination, $command->getSearch());
+        $articlesPaginator = $this->articleRepository->getArticlePreviewsPage($pagination, $command->getSearch());
 
         foreach ($articlesPaginator as $article) {
             $articleDto = new PreviewArticleDto();
@@ -59,6 +59,6 @@ class GetMainPageArticlesCommandHandler implements CommandHandlerInterface
      */
     public function supports($command): bool
     {
-        return $command instanceof GetMainPageArticlesCommand;
+        return $command instanceof GetArticlePreviewsCommand;
     }
 }

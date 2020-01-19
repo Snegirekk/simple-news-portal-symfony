@@ -18,7 +18,7 @@ class ArticleRepository extends BaseEntityRepository
      *
      * @return Paginator
      */
-    public function getArticlesForMainPage(Pagination $pagination, Search $search): Paginator
+    public function getArticlePreviewsPage(Pagination $pagination, Search $search): Paginator
     {
         $qb = $this->createQueryBuilder('a');
         $qb->select('a.title, a.announcement, a.slug');

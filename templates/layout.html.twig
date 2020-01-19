@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% import 'macros/menu_macros.html.twig' as menuMacros %}
+
+{% set currentCategoryId = app.request.query.get('category') %}
+{% set sort = app.request.query.get('sort') %}
+
+{% set queryParams = {
+    itemsPerPage: app.request.query.get('itemsPerPage'),
+    sort: sort,
+    category: currentCategoryId,
+} %}
+
+{% block body %}
+    <header class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4 font-italic position-relative d-inline-block">Extra Fresh News<a href="{{ path('index') }}" class="stretched-link"></a></h1>
+            <p class="lead font-italic">Everything you wish to know...</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <nav class="col-3">
+                {% block sidebar %}
+                    <ul class="nav flex-column nav-pills">
+                        {{ menuMacros.menuItems(currentCategoryId, getMenuItems(), queryParams) }}
+                    </ul>
+                {% endblock sidebar %}
+            </nav>
+
+            <div class="col">
+                {% block content %}{% endblock content %}
+            </div>
+        </div>
+    </div>
+{% endblock body %}

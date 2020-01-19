@@ -1,0 +1,19 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block content %}
+    {% embed 'embeds/admin_list.html.twig' %}
+        {% set createNewPath = path('create_article') %}
+        {% set isArticlesList = true %}
+        {% set page = articlesPage %}
+
+        {% block itemView %}
+            <h2>{{ item.title }}</h2>
+            <div>{{ item.announcement }}</div>
+
+            <div class="btn-group">
+                <a class="btn btn-success btn-sm" href="{{ path('edit_article', { slug: item.slug }) }}">Edit</a>
+                <a class="btn btn-danger btn-sm" href="{{ path('delete_article', { slug: item.slug }) }}">Delete</a>
+            </div>
+        {% endblock itemView %}
+    {% endembed %}
+{% endblock content %}

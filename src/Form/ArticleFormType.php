@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,8 +20,16 @@ class ArticleFormType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('announcement')
-            ->add('content')
+            ->add('announcement', TextareaType::class, [
+                'attr' => [
+                    'rows' => 3,
+                ],
+            ])
+            ->add('content', TextareaType::class, [
+                'attr' => [
+                    'rows' => 10,
+                ],
+            ])
             ->add('isActive', CheckboxType::class, [
                 'required' => false,
             ])

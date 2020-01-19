@@ -1,24 +1,32 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\CommandBus\Command\DeleteCategoryCommand;
+use App\CommandBus\Command\GetCategoriesPageCommand;
 use App\CommandBus\Command\GetEditableCategoryDataCommand;
 use App\CommandBus\Command\WriteCategoryCommand;
 use App\CommandBus\CommandBusInterface;
+use App\Controller\BaseController;
 use App\Dto\Category\CategoryIdDto;
 use App\Dto\Category\EditableCategoryDto;
 use App\Dto\DtoInterface;
+use App\Dto\PageDto;
 use App\Form\CategoryFormType;
+use App\Pagination\Pagination;
 use App\Repository\CategoryRepository;
 use App\Search\Search;
+use OutOfBoundsException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends BaseController
 {
+    private const ITEMS_PER_PAGE = 10;
+
     /**
      * @var CategoryRepository
      */
@@ -42,6 +50,37 @@ class CategoryController extends BaseController
      *
      * @return Response
      *
+     * @Route(name="admin.list_categories", path="/admin/categories", methods={"GET"})
+     */
+    public function listCategories(Request $request): Response
+    {
+        $command = new GetCategoriesPageCommand();
+
+        $page = $request->query->getInt('page', 1);
+        $itemsPerPage = $request->query->getInt('itemsPerPage', self::ITEMS_PER_PAGE);
+
+        $pagination = new Pagination($page, $itemsPerPage);
+        $command
+            ->setSearch(new Search())
+            ->setPagination($pagination);
+
+        try {
+            /** @var EditableCategoryDto[]|PageDto $categoriesPageDto */
+            $categoriesPageDto = $this->commandBus->exec($command);
+        } catch (OutOfBoundsException $exception) {
+            throw new NotFoundHttpException(sprintf('Page %d not found.', $page));
+        }
+
+        return $this->render('category/admin_list_categories.html.twig', [
+            'categoriesPage' => $categoriesPageDto,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @Route(name="create_category", path="/admin/categories/create", methods={"GET", "POST"})
      */
     public function createCategory(Request $request): Response
@@ -53,7 +92,7 @@ class CategoryController extends BaseController
             return $this->redirectToRoute('edit_category', ['id' => $category->getId()]);
         }
 
-        return $this->render('edit_category.html.twig', [
+        return $this->render('category/edit_category.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -83,7 +122,7 @@ class CategoryController extends BaseController
             $this->writeCategory($form->getData());
         }
 
-        return $this->render('edit_category.html.twig', [
+        return $this->render('category/edit_category.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -93,7 +132,7 @@ class CategoryController extends BaseController
      *
      * @return Response
      *
-     * @Route(name="delete_category", path="/admin/categories/delete/{id}", methods={"POST"})
+     * @Route(name="delete_category", path="/admin/categories/delete/{id}", methods={"GET"})
      */
     public function deleteCategory(int $id): Response
     {
@@ -105,7 +144,7 @@ class CategoryController extends BaseController
 
         $this->commandBus->exec($command);
 
-        return $this->redirectToRoute('index');
+        return $this->redirectToRoute('admin.list_categories');
     }
 
     /**
@@ -116,7 +155,9 @@ class CategoryController extends BaseController
      */
     private function getCategoryForm(Request $request, ?EditableCategoryDto $categoryDto = null): FormInterface
     {
-        $categories = $this->categoryRepository->findCategoriesForChoice($excluded = [$categoryDto->getId()]);
+        $excludedCategories = $categoryDto ? [$categoryDto->getId()] : null;
+
+        $categories = $this->categoryRepository->findCategoriesForChoice($excludedCategories);
         $categories = array_combine(array_column($categories, 'name'), array_column($categories, 'id'));
 
         $form = $this->createForm(CategoryFormType::class, $categoryDto, [

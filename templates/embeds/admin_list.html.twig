@@ -1,0 +1,36 @@
+<a class="nav-link btn btn-sm btn-outline-info col-1" href="{{ createNewPath }}">Add</a>
+<hr>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {{ isArticlesList is defined ? 'active' }}" href="{{ path('admin') }}">News</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ isCategoriesList is defined ? 'active' }}" href="{{ path('admin.list_categories') }}">Categories</a>
+    </li>
+</ul>
+
+{% if page.count > 0 %}
+    {% for item in page %}
+        {% block itemView %}{% endblock itemView %}
+        <hr>
+    {% endfor %}
+
+    {% if page.totalPages > 1 %}
+        <nav>
+            {% embed 'embeds/pagination.html.twig' %}
+                {% set currentPage = app.request.query.get('page', 1) %}
+                {% set totalPages = page.totalPages %}
+                {% set routeName %}
+                    {%- if isArticlesList is defined -%}
+                        {{- 'admin' -}}
+                    {%- elseif isCategoriesList is defined -%}
+                        {{- 'admin.list_categories' -}}
+                    {%- endif -%}
+                {% endset %}
+            {% endembed %}
+        </nav>
+    {% endif %}
+{% else %}
+    <h1 class="text-muted">Nothing to show here.</h1>
+{% endif %}

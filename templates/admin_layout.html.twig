@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% set queryParams = {
+    itemsPerPage: app.request.query.get('itemsPerPage'),
+    sort: app.request.query.get('sort'),
+} %}
+
+{% block body %}
+    <header class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="font-italic position-relative d-inline-block">Extra Fresh News admin panel<a href="{{ path('admin') }}" class="stretched-link"></a></h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {% block content %}{% endblock content %}
+            </div>
+        </div>
+    </div>
+{% endblock body %}

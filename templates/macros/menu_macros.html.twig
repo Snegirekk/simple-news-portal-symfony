@@ -1,0 +1,15 @@
+{% macro menuItems(currentCategoryId, categories, queryParams) %}
+    {% for category in categories %}
+        {% set queryParams = queryParams|merge({ category: category.id }) %}
+        
+        <li class="nav-item">
+            <a class="nav-link {% if currentCategoryId == category.id %}active{% endif %}" href="{{ path('index', queryParams) }}">{{ category.title }}</a>
+
+            {% if category.subcategories %}
+                <ul class="nav flex-column nav-pills ml-3">
+                    {{ _self.menuItems(currentCategoryId, category.subcategories, queryParams) }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}

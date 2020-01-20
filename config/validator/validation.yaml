@@ -1,0 +1,50 @@
+App\Dto\Article\EditableArticleDto:
+  properties:
+    title:
+      - NotBlank: ~
+      - Length:
+          min: 5
+          max: 30
+          minMessage: 'Title must be at least {{ limit }} characters long'
+          maxMessage: 'Title cannot be longer than {{ limit }} characters'
+    announcement:
+      - NotBlank: ~
+      - Length:
+          min: 10
+          max: 250
+          minMessage: 'Announcement must be at least {{ limit }} characters long'
+          maxMessage: 'Announcement cannot be longer than {{ limit }} characters'
+    content:
+      - NotBlank: ~
+      - Length:
+          min: 20
+          max: 1500
+          minMessage: 'Content must be at least {{ limit }} characters long'
+          maxMessage: 'Content cannot be longer than {{ limit }} characters'
+    isActive:
+      - Type: bool
+    categoryId:
+      - NotBlank: ~
+      - Type: int
+
+App\Dto\Category\EditableCategoryDto:
+  properties:
+    title:
+      - NotBlank: ~
+      - Length:
+          min: 5
+          max: 30
+          minMessage: 'Title must be at least {{ limit }} characters long'
+          maxMessage: 'Title cannot be longer than {{ limit }} characters'
+    parentCategoryId:
+      - Type: int
+
+App\Dto\ArticleComment\CommentDto:
+  properties:
+    content:
+      - NotBlank: ~
+      - Length:
+          min: 10
+          max: 250
+          minMessage: 'Comment must be at least {{ limit }} characters long'
+          maxMessage: 'Comment cannot be longer than {{ limit }} characters'

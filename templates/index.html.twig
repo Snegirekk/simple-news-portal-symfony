@@ -1,0 +1,40 @@
+{% extends 'layout.html.twig' %}
+
+{% block sidebar %}
+    <div>
+        Sort direction:
+        {% if sort == 'createdAt_desc'%}
+            <a href="{{ path('index', queryParams|merge({ sort: 'createdAt_asc' })) }}">DESC</a>
+        {% else %}
+            <a href="{{ path('index', queryParams|merge({ sort: 'createdAt_desc' })) }}">ASC</a>
+        {% endif %}
+    </div>
+    <hr>
+
+    {{ parent(sidebar) }}
+{% endblock sidebar %}
+
+{% block content %}
+    {% if articlesPage.count > 0 %}
+        {% for article in articlesPage %}
+            <h2>{{ article.title }}</h2>
+            <div>
+                {{ article.announcement }}
+                <a href="{{ url('view_article', { slug: article.slug }) }}">Read more &raquo;</a>
+            </div>
+            <hr>
+        {% endfor %}
+
+        {% if articlesPage.totalPages > 1 %}
+            <nav>
+                {% embed 'embeds/pagination.html.twig' %}
+                    {% set currentPage = app.request.query.get('page', 1) %}
+                    {% set totalPages = articlesPage.totalPages %}
+                    {% set routeName = 'index' %}
+                {% endembed %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <h1 class="text-muted">Nothing to show here. Checkout subcategories.</h1>
+    {% endif %}
+{% endblock content %}

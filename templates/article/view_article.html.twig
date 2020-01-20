@@ -1,0 +1,26 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <h1>{{ article.title }}</h1>
+    <hr>
+    <p>{{ article.content }}</p>
+    <div class="float-right text-muted">{{ article.createdAt|date('H:i:s d M Y') }}</div>
+    <div class="clearfix"></div>
+    <hr>
+
+    {{ form(commentForm) }}
+
+    <hr>
+
+    {% if article.comments is empty %}
+        <p class="text-muted">Nobody has commented yet...</p>
+    {% else %}
+        {% for comment in article.comments %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text">{{ comment.content }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}
